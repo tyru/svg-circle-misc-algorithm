@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>SVG Graphs</title>
+    <style>
+    svg {
+      border: #000 1px solid;
+    }
+    </style>
+  </head>
+
+  <body>
+    <div id='app'>
+      半径：<input type='number' v-bind:value='r' v-on:input='r = $event.target.value' /><br/>
+      アルゴリズム：
+      <label><input type='radio' value='arc' v-model='strategy' />2 Arcs</label>
+      <label><input type='radio' value='cubic_bezier' v-model='strategy' />4 Cubic bezier curves</label><br/>
+      <br/>
+
+      <div>
+        <svg v-bind:width='width' v-bind:height='height'>
+          <g>
+            <!-- 横線 -->
+            <path stroke='black' d='M 0,250 L 500,250 Z'/>
+            <!-- 縦線 -->
+            <path stroke='black' d='M 250,0 L 250,500 Z'/>
+          </g>
+          <g>
+            <!-- 丸 -->
+            <path stroke='blue' fill='none' v-bind:d='drawCircle'/>
+            <g v-for='p in drawControlPoints'>
+              <!-- 点 (制御点や弧の端点など) -->
+              <circle v-bind:cx='p.x' v-bind:cy='p.y' v-bind:r='p.r' fill='red'/>
+              <!-- 点の座標 -->
+              <text v-bind:x='p.textX' v-bind:y='p.textY'>{{ p.text }}</text>
+            </g>
+            <!-- パス文字列 -->
+            <text v-for='(line,index) in pathLines' x='6' v-bind:y='16 + index * 10' font-size='12px'>{{ line }}</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <h3>参考記事</h3>
+    <ul>
+      <li><a href='http://d.hatena.ne.jp/Zellij/20131021/p1'>「イラレの円は本当は円じゃない」というけど誤差はどれくらいなのか</a></li>
+      <li><a href='https://cat-in-136.github.io/2014/03/bezier-1-kappa.html'>ベジェ曲線による円の描画の制御点の位置はなぜ0.55228…なのか?</a></li>
+      <li><a href='https://stackoverflow.com/questions/5737975/circle-drawing-with-svgs-arc-path'>geometry - Circle drawing with SVG&#39;s arc path - Stack Overflow</a></li>
+    </ul>
+  </body>
+
+  <script src='vue.min.js'></script>
+  <script src='app.js'></script>
+</html>
