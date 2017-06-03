@@ -33,6 +33,9 @@
     .show-text-on-hover:hover text {
       visibility: visible;
     }
+    .margin-top-bottom {
+      margin: 10px 0;
+    }
     </style>
   </head>
 
@@ -41,7 +44,7 @@
 
     <div id='app' class='container'>
       <svg v-bind:width='width' v-bind:height='height' class='black-border'>
-        <text x='256' y='16' font-size='12px'>Hover a red circle to show its coordinate.</text>
+        <text v-if='!hidePoints' x='256' y='16' font-size='12px'>Hover a red circle to show its coordinate.</text>
         <g>
           <!-- 横線 -->
           <path stroke='black' d='M 0,250 L 500,250 Z'/>
@@ -51,7 +54,7 @@
         <g>
           <!-- 丸 -->
           <path stroke='blue' fill='none' v-bind:d='drawCircle'/>
-          <g v-for='p in drawControlPoints' class='show-text-on-hover'>
+          <g v-if='!hidePoints' v-for='p in drawControlPoints' class='show-text-on-hover'>
             <!-- 点 (制御点や弧の端点など) -->
             <circle v-bind:cx='p.x' v-bind:cy='p.y' v-bind:r='p.r' fill='red'/>
             <!-- 点の座標 -->
@@ -63,27 +66,38 @@
       </svg>
 
       <div class='input'>
-        アルゴリズム：
-        <ul class='list'>
-          <li><label><input type='radio' value='arc' v-model='strategy' />2本の円弧で描画</label></li>
-          <li><label><input type='radio' value='cubic_bezier' v-model='strategy' />4本の3次ベジェ曲線で描画</label></li>
-          <li><label><input type='radio' value='quad_bezier' v-model='strategy' />8本の2次ベジェ曲線で描画</label></li>
-        </ul>
+        <section class='margin-top-bottom'>
+          アルゴリズム：
+          <ul class='list'>
+            <li><label><input type='radio' value='arc' v-model='strategy' />2本の円弧で描画</label></li>
+            <li><label><input type='radio' value='cubic_bezier' v-model='strategy' />4本の3次ベジェ曲線で描画</label></li>
+            <li><label><input type='radio' value='quad_bezier' v-model='strategy' />8本の2次ベジェ曲線で描画</label></li>
+          </ul>
+        </section>
 
-        図形：
-        <ul class='list'>
-          <li v-if='hasSupported("circle")'><label><input type='radio' value='circle' v-model='figure' />真円</label></li>
-          <li v-if='hasSupported("ellipse")'><label><input type='radio' value='ellipse' v-model='figure' />楕円</label></li>
-        </ul>
+        <section class='margin-top-bottom'>
+          図形：
+          <ul class='list'>
+            <li v-if='hasSupported("circle")'><label><input type='radio' value='circle' v-model='figure' />真円</label></li>
+            <li v-if='hasSupported("ellipse")'><label><input type='radio' value='ellipse' v-model='figure' />楕円</label></li>
+          </ul>
+        </section>
 
-        半径：
-        <ul v-if='figure == "circle"' class='list'>
-          <li><input type='number' v-model.number='rx' v-bind:value='rx' /></li>
-        </ul>
-        <ul v-if='figure == "ellipse"' class='list'>
-          <li>X: <input type='number' v-model.number='rx' v-bind:value='rx' /></li>
-          <li>Y: <input type='number' v-model.number='ry' v-bind:value='ry' /></li>
-        </ul>
+        <section class='margin-top-bottom'>
+          半径：
+          <ul v-if='figure == "circle"' class='list'>
+            <li><input type='number' v-model.number='rx' v-bind:value='rx' /></li>
+          </ul>
+          <ul v-if='figure == "ellipse"' class='list'>
+            <li>X: <input type='number' v-model.number='rx' v-bind:value='rx' /></li>
+            <li>Y: <input type='number' v-model.number='ry' v-bind:value='ry' /></li>
+          </ul>
+        </section>
+
+        <section class='margin-top-bottom'>
+          端点・制御点を隠す
+          <input type='checkbox' v-model='hidePoints' />
+        </section>
       </div>
     </div>
 

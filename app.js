@@ -108,6 +108,7 @@
       rx: 100,
       ry: 100,
       strategy: 'arc',
+      hidePoints: false,
     },
     computed: {
       drawCircle() {
