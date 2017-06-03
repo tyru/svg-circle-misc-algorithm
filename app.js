@@ -65,17 +65,23 @@
       const rx = param.rx;
       const ry = param.figure === 'circle' ? rx : param.ry;
       const SEGMENTS = 8;
-      const angle = 2 * Math.PI / SEGMENTS;
-      let paths = [['M', CX + rx, CY]];
-      for (let i = 1; i <= SEGMENTS; ++i) {
-        const theta = i * angle;
-        const anchorX = rx * Math.cos(theta);
-        const anchorY = ry * Math.sin(theta);
-        const controlX = anchorX + rx * Math.tan(angle / 2) * Math.cos(theta - Math.PI / 2);
-        const controlY = anchorY + ry * Math.tan(angle / 2) * Math.sin(theta - Math.PI / 2);
-        paths.push(['Q', controlX + CX, controlY + CY, anchorX + CX, anchorY + CY]);
-      }
-      return paths;
+      const ANGLE = 2 * Math.PI / SEGMENTS;
+      const anchorX = theta => rx * Math.cos(theta);
+      const anchorY = theta => ry * Math.sin(theta);
+      const controlX = theta => anchorX(theta) + rx * Math.tan(ANGLE / 2) * Math.cos(theta - Math.PI / 2);
+      const controlY = theta => anchorY(theta) + ry * Math.tan(ANGLE / 2) * Math.sin(theta - Math.PI / 2);
+      return [
+        ['M', CX + rx, CY],
+        ... this.range(1, SEGMENTS).map(index => {
+          const theta = index * ANGLE;
+          return ['Q', controlX(theta) + CX, controlY(theta) + CY, anchorX(theta) + CX, anchorY(theta) + CY];
+        })
+      ];
+    }
+
+    range(from, to) {
+      const d = to - from;
+      return [...Array(d + 1).keys()].map(n => n + from);
     }
 
     drawControlPoints(param) {
