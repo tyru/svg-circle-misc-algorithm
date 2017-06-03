@@ -94,9 +94,9 @@
         <section class='margin-top-bottom'>
           アルゴリズム：
           <ul class='list'>
-            <li><label><input type='radio' value='arc' v-model='strategy' />2本の円弧で描画</label></li>
-            <li><label><input type='radio' value='cubic_bezier' v-model='strategy' />4本の3次ベジェ曲線で描画</label></li>
-            <li><label><input type='radio' value='quad_bezier' v-model='strategy' />8本の2次ベジェ曲線で描画</label></li>
+            <li><label><input type='radio' value='arc' v-model='strategy' />2本の円弧で描画</label> (<a href='#desc-algorithm-2-arcs'>説明</a>)</li>
+            <li><label><input type='radio' value='cubic_bezier' v-model='strategy' />4本の3次ベジェ曲線で描画</label> (<a href='#desc-algorithm-4-cubic-bezier-curves'>説明</a>)</li>
+            <li><label><input type='radio' value='quad_bezier' v-model='strategy' />8本の2次ベジェ曲線で描画</label> (<a href='#desc-algorithm-8-quad-bezier-curves'>説明</a>)</li>
           </ul>
         </section>
 
@@ -126,6 +126,21 @@
       </div>
     </div>
 
+    <section id='toc' class='toplevel-section'>
+      <h2><a href='#toc' class='permalink'>#</a> 目次</h2>
+      <ul>
+        <li><a href='#whatsthis'>これは何？</a></li>
+        <li><a href='#desc-algorithm'>アルゴリズムについての解説</a>
+          <ul>
+            <li><a href='#desc-algorithm-2-arcs'>2本の円弧で描画</a></li>
+            <li><a href='#desc-algorithm-4-cubic-bezier-curves'>4本の3次ベジェ曲線で描画</a></li>
+            <li><a href='#desc-algorithm-8-quad-bezier-curves'>8本の2次ベジェ曲線で描画</a></li>
+          </ul>
+        </li>
+        <li><a href='#references'>参考記事</a></li>
+      </ul>
+    </section>
+
     <section id='whatsthis' class='toplevel-section'>
       <h2><a href='#whatsthis' class='permalink'>#</a> これは何？</h2>
       HTML5 上であれば &lt;circle&gt; タグを使えば円を描くことは出来ますが、
@@ -141,7 +156,7 @@
         <a href='http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo_03.htm'>svg要素の基本的な使い方まとめ</a>
       </section>
 
-      などに移植できるよう汎用性を持たせることができます。
+      などに移植できるよう汎用性を持たせることができます。<br/>
       …というのは調べて分かった建前で、ふと必要になったから調べただけです。
     </section>
 
