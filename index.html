@@ -18,6 +18,15 @@
       flex-direction: row;
         justify-content: space-around;
     }
+    .permalink {
+      font-size: small;
+    }
+    .quote {
+      background-color: #d0d0d0;
+      display: table;
+      padding: 0 10px;
+      margin: 10px 0;
+    }
     </style>
   </head>
 
@@ -71,12 +80,57 @@
       </div>
     </div>
 
-    <h3>参考記事</h3>
-    <ul>
-      <li><a href='http://d.hatena.ne.jp/Zellij/20131021/p1'>「イラレの円は本当は円じゃない」というけど誤差はどれくらいなのか</a></li>
-      <li><a href='https://cat-in-136.github.io/2014/03/bezier-1-kappa.html'>ベジェ曲線による円の描画の制御点の位置はなぜ0.55228…なのか?</a></li>
-      <li><a href='https://stackoverflow.com/questions/5737975/circle-drawing-with-svgs-arc-path'>geometry - Circle drawing with SVG&#39;s arc path - Stack Overflow</a></li>
-    </ul>
+    <section id='whatsthis'>
+      <h2><a href='#whatsthis' class='permalink'>#</a> これは何？</h2>
+      HTML5 上であれば &lt;circle&gt; タグを使えば円を描くことは出来ますが、
+      SVG の &lt;path&gt; タグの d 属性に指定できるパス文字列の形式で表すことで
+
+      <section class='quote'>
+        <ul>
+          <li>WPF/XAML(Path要素におけるパスマークアップ構文として)</li>
+          <li>javaFX/FXML(javafx.scene.shape.SVGPathのcontentプロパティ)</li>
+          <li>android:VectorDrawable</li>
+          <li>canvas要素/Path2Dオブジェクト</li>
+        </ul>
+        <a href='http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo_03.htm'>svg要素の基本的な使い方まとめ</a>
+      </section>
+
+      などに移植できるよう汎用性を持たせることができます。
+      …というのは調べて分かった建前で、ふと必要になったから調べてみただけです。
+    </section>
+
+    <section id='references'>
+      <h2><a href='#references' class='permalink'>#</a> 参考記事</h2>
+      <ul>
+        <li>SVGタグについての全般的な解説
+          <ul>
+            <li><a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths'>Paths - SVG | MDN</a></li>
+            <li><a href='http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo_03.htm'>svg要素の基本的な使い方まとめ</a></li>
+          </ul>
+        </li>
+        <li>2本の円弧を用いた円の描画の元ネタ (2 Arcs)
+          <ul>
+            <li><a href='https://stackoverflow.com/questions/5737975/circle-drawing-with-svgs-arc-path'>geometry - Circle drawing with SVG&#39;s arc path - Stack Overflow</a></li>
+          </ul>
+        </li>
+        <li>4本の3次ベジェ曲線を用いた円の描画の元ネタ (4 Cubic bezier curves)
+          <ul>
+            <li><a href='http://d.hatena.ne.jp/Zellij/20131021/p1'>「イラレの円は本当は円じゃない」というけど誤差はどれくらいなのか - 大人になってからの再学習</a></li>
+          </ul>
+        </li>
+        <li>8本の2次ベジェ曲線を用いた円の描画の元ネタ (8 Quad bezier curves)
+          <ul>
+            <li><a href='http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html'>FN0506002 - 描画メソッドで円を描く - Flash : テクニカルノート</a></li>
+            <li>元ネタはn本だが8本で満足行く円が得られたのでこのページでは8本固定にしてある</li>
+          </ul>
+        </li>
+        <li>3次ベジェ曲線で円を描く方法に関する URL 集
+          <ul>
+            <li><a href='https://cat-in-136.github.io/2014/03/bezier-1-kappa.html'>ベジェ曲線による円の描画の制御点の位置はなぜ0.55228…なのか?</a></li>
+          </ul>
+        </li>
+      </ul>
+    </section>
   </body>
 
   <script src='vue.min.js'></script>
