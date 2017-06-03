@@ -65,9 +65,9 @@
       <div class='input'>
         アルゴリズム：
         <ul class='list'>
-          <li><label><input type='radio' value='arc' v-model='strategy' />2 Arcs</label></li>
-          <li><label><input type='radio' value='cubic_bezier' v-model='strategy' />4 Cubic bezier curves</label></li>
-          <li><label><input type='radio' value='quad_bezier' v-model='strategy' />8 Quad bezier curves</label></li>
+          <li><label><input type='radio' value='arc' v-model='strategy' />2本の円弧で描画</label></li>
+          <li><label><input type='radio' value='cubic_bezier' v-model='strategy' />4本の3次ベジェ曲線で描画</label></li>
+          <li><label><input type='radio' value='quad_bezier' v-model='strategy' />8本の2次ベジェ曲線で描画</label></li>
         </ul>
 
         図形：
@@ -115,17 +115,17 @@
             <li><a href='http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo_03.htm'>svg要素の基本的な使い方まとめ</a></li>
           </ul>
         </li>
-        <li>2本の円弧を用いた円の描画の元ネタ (2 Arcs)
+        <li>2本の円弧を用いた円の描画の元ネタ
           <ul>
             <li><a href='https://stackoverflow.com/questions/5737975/circle-drawing-with-svgs-arc-path'>geometry - Circle drawing with SVG&#39;s arc path - Stack Overflow</a></li>
           </ul>
         </li>
-        <li>4本の3次ベジェ曲線を用いた円の描画の元ネタ (4 Cubic bezier curves)
+        <li>4本の3次ベジェ曲線を用いた円の描画の元ネタ
           <ul>
             <li><a href='http://d.hatena.ne.jp/Zellij/20131021/p1'>「イラレの円は本当は円じゃない」というけど誤差はどれくらいなのか - 大人になってからの再学習</a></li>
           </ul>
         </li>
-        <li>8本の2次ベジェ曲線を用いた円の描画の元ネタ (8 Quad bezier curves)
+        <li>8本の2次ベジェ曲線を用いた円の描画の元ネタ
           <ul>
             <li><a href='http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html'>FN0506002 - 描画メソッドで円を描く - Flash : テクニカルノート</a></li>
             <li>元ネタはn本だが8本で満足行く円が得られたのでこのページでは8本固定にしてある</li>
