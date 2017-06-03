@@ -4,40 +4,66 @@
   const CX = 250;
   const CY = 250;
   const KAPPA = (-1 + Math.sqrt(2)) / 3 * 4;
-  const CIRCLE_STRATEGIES = {
-    arc(r) {
+
+  class ArcStarategy {
+    drawCircle(param) {
+      const rx = param.rx;
+      const ry = param.figure === 'circle' ? rx : param.ry;
       return [
-        ['M', CX - r, CY],
-        ['A', r, r, 0, 1, 0, CX + r, CY],
-        ['A', r, r, 0, 1, 0, CX - r, CY],
-      ];
-    },
-    cubic_bezier(r) {
-      return [
-        ['M', CX - r, CY],
-        ['C', CX - r, CY - KAPPA * r, CX - KAPPA * r, CY - r, CX, CY - r],
-        ['C', CX + KAPPA * r, CY - r, CX + r, CY - KAPPA * r, CX + r, CY],
-        ['C', CX + r, CY + KAPPA * r, CX + KAPPA * r, CY + r, CX, CY + r],
-        ['C', CX - KAPPA * r, CY + r, CX - r, CY + KAPPA * r, CX - r, CY],
+        ['M', CX - rx, CY],
+        ['A', rx, ry, 0, 1, 0, CX + rx, CY],
+        ['A', rx, ry, 0, 1, 0, CX - rx, CY],
       ];
     }
-  };
-  const CP_STRATEGIES = {
-    arc(r) {
-      return [[CX - r, CY], [CX + r, CY]];
-    },
-    cubic_bezier(r) {
+
+    drawControlPoints(param) {
+      const rx = param.rx;
+      return [[CX - rx, CY], [CX + rx, CY]];
+    }
+
+    hasSupported(strategy) {
+      return strategy === 'circle' ||
+             strategy === 'ellipse';
+    }
+  }
+
+  class CubicBezierStarategy {
+    drawCircle(param) {
+      const rx = param.rx;
+      const ry = param.figure === 'circle' ? rx : param.ry;
       return [
-        [CX - r, CY],
-        [CX - r, CY - KAPPA * r], [CX - KAPPA * r, CY - r, {textX: CX - r - 50, textY: CY - r}],
-        [CX, CY - r, {textX: CX - 40, textY: CY - r - 10}],
-        [CX + KAPPA * r, CY - r], [CX + r, CY - KAPPA * r],
-        [CX + r, CY],
-        [CX + r, CY + KAPPA * r], [CX + KAPPA * r, CY + r],
-        [CX, CY + r, {textX: CX - 40, textY: CY + r + 20}],
-        [CX - KAPPA * r, CY + r, {textX: CX - r - 40, textY: CY + r + 20}], [CX - r, CY + KAPPA * r],
+        ['M', CX - rx, CY],
+        ['C', CX - rx, CY - KAPPA * ry, CX - KAPPA * rx, CY - ry, CX, CY - ry],
+        ['C', CX + KAPPA * rx, CY - ry, CX + rx, CY - KAPPA * ry, CX + rx, CY],
+        ['C', CX + rx, CY + KAPPA * ry, CX + KAPPA * rx, CY + ry, CX, CY + ry],
+        ['C', CX - KAPPA * rx, CY + ry, CX - rx, CY + KAPPA * ry, CX - rx, CY],
       ];
     }
+
+    drawControlPoints(param) {
+      const rx = param.rx;
+      const ry = param.figure === 'circle' ? rx : param.ry;
+      return [
+        [CX - rx, CY],
+        [CX - rx, CY - KAPPA * ry], [CX - KAPPA * rx, CY - ry, {textX: CX - rx - 50, textY: CY - ry}],
+        [CX, CY - ry, {textX: CX - 40, textY: CY - ry - 10}],
+        [CX + KAPPA * rx, CY - ry], [CX + rx, CY - KAPPA * ry],
+        [CX + rx, CY],
+        [CX + rx, CY + KAPPA * ry], [CX + KAPPA * rx, CY + ry],
+        [CX, CY + ry, {textX: CX - 40, textY: CY + ry + 20}],
+        [CX - KAPPA * rx, CY + ry, {textX: CX - rx - 40, textY: CY + ry + 20}], [CX - rx, CY + KAPPA * ry],
+      ];
+    }
+
+    hasSupported(strategy) {
+      return strategy === 'circle' ||
+             strategy === 'ellipse';
+    }
+  }
+
+  const STRATEGIES = {
+    arc: new ArcStarategy,
+    cubic_bezier: new CubicBezierStarategy,
   };
 
   new Vue({
@@ -45,8 +71,10 @@
     data: {
       width: '500px',
       height: '500px',
-      r: '100',
-      strategy: 'arc'
+      figure: 'circle',
+      rx: 100,
+      ry: 100,
+      strategy: 'arc',
     },
     computed: {
       drawCircle() {
@@ -58,9 +86,9 @@
           .map(op => [op[0], ... op.slice(1).map(Math.round)].join(' '));
       },
       drawControlPoints() {
-        if (CP_STRATEGIES[this.strategy]) {
-          const r = parseInt(this.r, 10);
-          const points = CP_STRATEGIES[this.strategy].call(this, r);
+        if (STRATEGIES[this.strategy]) {
+          const param = this.makeParameter();
+          const points = STRATEGIES[this.strategy].drawControlPoints(param);
           return points.map(p => ({
             x: p[0],
             y: p[1],
@@ -75,8 +103,9 @@
     },
     methods: {
       getCirclePaths() {
-        if (CIRCLE_STRATEGIES[this.strategy]) {
-          return CIRCLE_STRATEGIES[this.strategy].call(this, parseInt(this.r, 10));
+        if (STRATEGIES[this.strategy]) {
+          const param = this.makeParameter();
+          return STRATEGIES[this.strategy].drawCircle(param)
         }
         return [];
       },
@@ -84,6 +113,20 @@
         const x = Math.round(p[0]);
         const y = Math.round(p[1]);
         return `(${x}, ${y})`;
+      },
+      makeParameter() {
+        return {
+          r: this.rx,
+          rx: this.rx,
+          ry: this.ry,
+          figure: this.figure,
+        };
+      },
+      hasSupported(figure) {
+        if (STRATEGIES[this.strategy]) {
+          return STRATEGIES[this.strategy].hasSupported(figure);
+        }
+        return false;
       }
     }
   });
