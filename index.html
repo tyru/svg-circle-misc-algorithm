@@ -27,6 +27,10 @@
       padding: 0 10px;
       margin: 10px 0;
     }
+    .quote a {
+      display: block;
+      text-align: right;
+    }
     .show-text-on-hover text {
       visibility: hidden;
     }
@@ -131,7 +135,7 @@
       </section>
 
       などに移植できるよう汎用性を持たせることができます。
-      …というのは調べて分かった建前で、ふと必要になったから調べてみただけです。
+      …というのは調べて分かった建前で、ふと必要になったから調べただけです。
     </section>
 
     <section id='desc-algorithm' class='toplevel-section'>
@@ -179,6 +183,12 @@ A rx ry 0 1 0 (CX - rx) CY</pre>
 
       <section id='desc-algorithm-4-cubic-bezier-curves'>
         <h2><a href='#desc-algorithm-4-cubic-bezier-curves' class='permalink'>#</a> 4本の3次ベジェ曲線で描画</h2>
+        Illustrator でも使われているらしい方法。
+        <section class='quote'>
+          Illustratorの楕円ツールで書く円は、本当は円ではなくて、近似値なんです。つまり、円としてはわずかに歪んでいるわけ。これはベジェ曲線（wikipedia:ベジェ曲線）というものを使う以上、そういう仕様なのですね。
+          <a href='http://d.hatena.ne.jp/n-yuji/20131017/p1'>イラレの円は本当は円じゃない（もしくは時空の裂け目について） - 遠近法ノート</a>
+        </section>
+
         <a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths#.E3.83.99.E3.82.B8.E3.82.A7.E6.9B.B2.E7.B7.9A'>Paths - SVG | MDN</a> から引用。
         <section class='quote'>
           C x1 y1, x2 y2, x y
