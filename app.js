@@ -1,8 +1,11 @@
 (function () {
   'use strict';
 
+  /** 中心 X 座標 */
   const CX = 250;
+  /** 中心 Y 座標 */
   const CY = 250;
+  /** http://www.whizkidtech.redprince.net/bezier/circle/kappa/ */
   const KAPPA = (-1 + Math.sqrt(2)) / 3 * 4;
 
   class ArcStarategy {
@@ -17,8 +20,9 @@
     }
 
     drawControlPoints(param) {
-      const rx = param.rx;
-      return [[CX - rx, CY], [CX + rx, CY]];
+      return this.drawCircle(param)
+        .filter(op => op[0] === 'A')
+        .map(op => [op[6], op[7]]);
     }
 
     hasSupported(strategy) {
@@ -61,9 +65,45 @@
     }
   }
 
+  class QuadBezierStarategy {
+    /**
+     * http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html
+     */
+    drawCircle(param) {
+      const r = param.r;
+      const SEGMENTS = 8;
+      const angle = 2 * Math.PI / SEGMENTS;
+      let paths = [['M', CX + r, CY]];
+      for (let i = 1; i <= SEGMENTS; ++i) {
+        const theta = i * angle;
+        const anchorX = r * Math.cos(theta);
+        const anchorY = r * Math.sin(theta);
+        const controlX = anchorX + r * Math.tan(angle / 2) * Math.cos(theta - Math.PI / 2);
+        const controlY = anchorY + r * Math.tan(angle / 2) * Math.sin(theta - Math.PI / 2);
+        paths.push(['Q', controlX + CX, controlY + CY, anchorX + CX, anchorY + CY]);
+      }
+      return paths;
+    }
+
+    drawControlPoints(param) {
+      const paths = this.drawCircle(param);
+      const m = paths[0].slice(1);
+      const qs = paths.slice(1).reduce(
+        (list,op) => list.concat([[op[1], op[2]], [op[3], op[4]]]),
+        []
+      );
+      return [m, ... qs];
+    }
+
+    hasSupported(strategy) {
+      return strategy === 'circle';
+    }
+  }
+
   const STRATEGIES = {
     arc: new ArcStarategy,
     cubic_bezier: new CubicBezierStarategy,
+    quad_bezier: new QuadBezierStarategy,
   };
 
   new Vue({
