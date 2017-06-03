@@ -49,13 +49,13 @@
       const ry = param.figure === 'circle' ? rx : param.ry;
       return [
         [CX - rx, CY],
-        [CX - rx, CY - KAPPA * ry], [CX - KAPPA * rx, CY - ry, {textX: CX - rx - 50, textY: CY - ry}],
-        [CX, CY - ry, {textX: CX - 40, textY: CY - ry - 10}],
+        [CX - rx, CY - KAPPA * ry], [CX - KAPPA * rx, CY - ry],
+        [CX, CY - ry],
         [CX + KAPPA * rx, CY - ry], [CX + rx, CY - KAPPA * ry],
         [CX + rx, CY],
         [CX + rx, CY + KAPPA * ry], [CX + KAPPA * rx, CY + ry],
-        [CX, CY + ry, {textX: CX - 40, textY: CY + ry + 20}],
-        [CX - KAPPA * rx, CY + ry, {textX: CX - rx - 40, textY: CY + ry + 20}], [CX - rx, CY + KAPPA * ry],
+        [CX, CY + ry],
+        [CX - KAPPA * rx, CY + ry], [CX - rx, CY + KAPPA * ry],
       ];
     }
 
@@ -132,9 +132,7 @@
           return points.map(p => ({
             x: p[0],
             y: p[1],
-            textX: p[2] !== undefined ? p[2].textX : p[0] + 5,
-            textY: p[2] !== undefined ? p[2].textY : p[1] + 20,
-            r: '3px',
+            r: '5px',
             text: this.getCoordText(p)
           }));
         }
