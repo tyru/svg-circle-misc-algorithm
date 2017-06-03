@@ -62,16 +62,17 @@
      * http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html
      */
     drawCircle(param) {
-      const r = param.r;
+      const rx = param.rx;
+      const ry = param.figure === 'circle' ? rx : param.ry;
       const SEGMENTS = 8;
       const angle = 2 * Math.PI / SEGMENTS;
-      let paths = [['M', CX + r, CY]];
+      let paths = [['M', CX + rx, CY]];
       for (let i = 1; i <= SEGMENTS; ++i) {
         const theta = i * angle;
-        const anchorX = r * Math.cos(theta);
-        const anchorY = r * Math.sin(theta);
-        const controlX = anchorX + r * Math.tan(angle / 2) * Math.cos(theta - Math.PI / 2);
-        const controlY = anchorY + r * Math.tan(angle / 2) * Math.sin(theta - Math.PI / 2);
+        const anchorX = rx * Math.cos(theta);
+        const anchorY = ry * Math.sin(theta);
+        const controlX = anchorX + rx * Math.tan(angle / 2) * Math.cos(theta - Math.PI / 2);
+        const controlY = anchorY + ry * Math.tan(angle / 2) * Math.sin(theta - Math.PI / 2);
         paths.push(['Q', controlX + CX, controlY + CY, anchorX + CX, anchorY + CY]);
       }
       return paths;
@@ -87,7 +88,7 @@
     }
 
     getSupportedFigures() {
-      return ['circle'];
+      return ['circle', 'ellipse'];
     }
   }
 
