@@ -1,0 +1,57 @@
+.black-border {
+  border: #000 1px solid;
+}
+.list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-left: 10px;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+    justify-content: space-around;
+}
+.permalink {
+  font-size: small;
+}
+.quote {
+  background-color: #d0d0d0;
+  display: table;
+  padding: 0 10px;
+  margin: 10px 0;
+}
+.quote a {
+  display: block;
+  text-align: right;
+}
+.show-text-on-hover text {
+  visibility: hidden;
+}
+.show-text-on-hover:hover text {
+  visibility: visible;
+}
+.margin-top-bottom {
+  margin: 10px 0;
+}
+.toplevel-section {
+  width: 75%;
+}
+.svg-example {
+  display: block;
+}
+.code-inline {
+  display: inline;
+  background-color: #dcfff9;
+}
+.code-block {
+  display: table;
+  background-color: #dcfff9;
+}
+
+/* Vim :TOhtml by evening colorscheme */
+.vim-tohtml { white-space: pre-wrap; font-family: monospace; color: #ffffff; background-color: #6c6c6c; font-size: 1em; }
+.vim-tohtml .Comment { color: #00ffff; }
+.vim-tohtml .Constant { color: #ff40ff; }
+.vim-tohtml .Identifier { color: #00ffff; font-weight: bold; }
+.vim-tohtml .Statement { color: #ffff00; font-weight: bold; }
