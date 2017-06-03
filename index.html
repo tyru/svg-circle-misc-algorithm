@@ -78,8 +78,8 @@
         <section class='margin-top-bottom'>
           図形：
           <ul class='list'>
-            <li v-if='hasSupported("circle")'><label><input type='radio' value='circle' v-model='figure' />真円</label></li>
-            <li v-if='hasSupported("ellipse")'><label><input type='radio' value='ellipse' v-model='figure' />楕円</label></li>
+            <li v-if='hasSupportedFigure(strategy, "circle")'><label><input type='radio' value='circle' v-model='figure' />真円</label></li>
+            <li v-if='hasSupportedFigure(strategy, "ellipse")'><label><input type='radio' value='ellipse' v-model='figure' />楕円</label></li>
           </ul>
         </section>
 

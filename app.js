@@ -25,9 +25,8 @@
         .map(op => [op[6], op[7]]);
     }
 
-    hasSupported(strategy) {
-      return strategy === 'circle' ||
-             strategy === 'ellipse';
+    getSupportedFigures() {
+      return ['circle', 'ellipse'];
     }
   }
 
@@ -53,9 +52,8 @@
         );
     }
 
-    hasSupported(strategy) {
-      return strategy === 'circle' ||
-             strategy === 'ellipse';
+    getSupportedFigures() {
+      return ['circle', 'ellipse'];
     }
   }
 
@@ -88,8 +86,8 @@
         );
     }
 
-    hasSupported(strategy) {
-      return strategy === 'circle';
+    getSupportedFigures() {
+      return ['circle'];
     }
   }
 
@@ -109,6 +107,18 @@
       ry: 100,
       strategy: 'arc',
       hidePoints: false,
+    },
+    watch: {
+      /**
+       * If selected strategy doesn't support current figure,
+       * change it to available one.
+       */
+      strategy(val) {
+        if (!this.hasSupportedFigure(val, this.figure)) {
+          const figures = this.getSupportedFigures(val);
+          this.figure = figures[0];
+        }
+      }
     },
     computed: {
       drawCircle() {
@@ -154,11 +164,15 @@
           figure: this.figure,
         };
       },
-      hasSupported(figure) {
-        if (STRATEGIES[this.strategy]) {
-          return STRATEGIES[this.strategy].hasSupported(figure);
+      getSupportedFigures(strategy) {
+        if (STRATEGIES[strategy]) {
+          return STRATEGIES[strategy].getSupportedFigures();
         }
-        return false;
+        return [];
+      },
+      hasSupportedFigure(strategy, figure) {
+        const figures = this.getSupportedFigures(strategy);
+        return figures.indexOf(figure) !== -1;
       }
     }
   });
