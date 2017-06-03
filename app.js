@@ -45,18 +45,12 @@
     }
 
     drawControlPoints(param) {
-      const rx = param.rx;
-      const ry = param.figure === 'circle' ? rx : param.ry;
-      return [
-        [CX - rx, CY],
-        [CX - rx, CY - KAPPA * ry], [CX - KAPPA * rx, CY - ry],
-        [CX, CY - ry],
-        [CX + KAPPA * rx, CY - ry], [CX + rx, CY - KAPPA * ry],
-        [CX + rx, CY],
-        [CX + rx, CY + KAPPA * ry], [CX + KAPPA * rx, CY + ry],
-        [CX, CY + ry],
-        [CX - KAPPA * rx, CY + ry], [CX - rx, CY + KAPPA * ry],
-      ];
+      return this.drawCircle(param)
+        .filter(op => op[0] === 'C')
+        .reduce(
+          (list,op) => list.concat([[op[1], op[2]], [op[3], op[4]], [op[5], op[6]]]),
+          []
+        );
     }
 
     hasSupported(strategy) {
@@ -86,13 +80,12 @@
     }
 
     drawControlPoints(param) {
-      const paths = this.drawCircle(param);
-      const m = paths[0].slice(1);
-      const qs = paths.slice(1).reduce(
-        (list,op) => list.concat([[op[1], op[2]], [op[3], op[4]]]),
-        []
-      );
-      return [m, ... qs];
+      return this.drawCircle(param)
+        .filter(op => op[0] === 'Q')
+        .reduce(
+          (list,op) => list.concat([[op[1], op[2]], [op[3], op[4]]]),
+          []
+        );
     }
 
     hasSupported(strategy) {
