@@ -36,6 +36,20 @@
     .margin-top-bottom {
       margin: 10px 0;
     }
+    .toplevel-section {
+      width: 75%;
+    }
+    .svg-example {
+      display: block;
+    }
+    .code-inline {
+      display: inline;
+      background-color: #dcfff9;
+    }
+    .code-block {
+      display: table;
+      background-color: #dcfff9;
+    }
     </style>
   </head>
 
@@ -101,7 +115,7 @@
       </div>
     </div>
 
-    <section id='whatsthis'>
+    <section id='whatsthis' class='toplevel-section'>
       <h2><a href='#whatsthis' class='permalink'>#</a> これは何？</h2>
       HTML5 上であれば &lt;circle&gt; タグを使えば円を描くことは出来ますが、
       SVG の &lt;path&gt; タグの d 属性に指定できるパス文字列の形式で表すことで
@@ -120,7 +134,110 @@
       …というのは調べて分かった建前で、ふと必要になったから調べてみただけです。
     </section>
 
-    <section id='references'>
+    <section id='desc-algorithm' class='toplevel-section'>
+      <h2><a href='#desc-algorithm' class='permalink'>#</a> アルゴリズムについての解説</h2>
+      誤差 (=円の歪み) に関しては以下の認識です (上に行くほど誤差が発生する)。
+      測定をした訳ではないので間違っているかもしれません、すみません…。
+      ただ2本の円弧に関してはベジェ曲線と違って本当の円なので誤差はないはずです。
+      <ol>
+        <li>8本の2次ベジェ曲線で描画</li>
+        <li>4本の3次ベジェ曲線で描画</li>
+        <li>2本の円弧で描画</li>
+      </ol>
+
+      <section id='desc-algorithm-2-arcs'>
+        <h2><a href='#desc-algorithm-2-arcs' class='permalink'>#</a> 2本の円弧で描画</h2>
+        <a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths#.E5.86.86.E5.BC.A7'>Paths - SVG | MDN</a> から引用。
+        <section class='quote'>
+          A rx ry x-axis-rotation large-arc-flag sweep-flag x y
+        </section>
+        今回は x-axis-rotation, large-arc-flag sweep-flag は今回は無視して構いません。
+        ただ2本の曲線とも同じ値を渡す必要はあります (0,1,1 とか)。
+        rx,ry はそれぞれ縦と横の半径、x,y は終点の座標です。
+
+        上部分と下部分に分けて描画します (左右でもいい)。
+        ここでは横の半径が 40、縦の半径が 30 の楕円を描きます (rx=40, ry=30)。
+        現在の位置と x, y (終点) と縦横の半径の整合性が取れてないと正しく描画されません。
+
+        <h4>上部分</h4>
+        <pre class='code-inline'>M10,10 A40,30 0,1,0 90,10</pre>
+        <svg width='100' height='50' class='svg-example'>
+          <path stroke='blue' fill='none' d='M10,10 A40,30 0,1,0 90,10'/>
+        </svg>
+
+        <h4>下部分</h4>
+        <pre class='code-inline'>M90,40 A40,30 0,1,0 10,40</pre>
+        <svg width='100' height='50' class='svg-example'>
+          <path stroke='blue' fill='none' d='M90,40 A40,30 0,1,0 10,40'/>
+        </svg>
+
+        実際のコードが生成するパスは以下のようになります (CX,CY = 円の中心の X,Y 座標)。
+        <pre class='code-block'>M (CX - rx) CY
+A rx ry 0 1 0 (CX + rx) CY
+A rx ry 0 1 0 (CX - rx) CY</pre>
+      </section>
+
+      <section id='desc-algorithm-4-cubic-bezier-curves'>
+        <h2><a href='#desc-algorithm-4-cubic-bezier-curves' class='permalink'>#</a> 4本の3次ベジェ曲線で描画</h2>
+        <a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths#.E3.83.99.E3.82.B8.E3.82.A7.E6.9B.B2.E7.B7.9A'>Paths - SVG | MDN</a> から引用。
+        <section class='quote'>
+          C x1 y1, x2 y2, x y
+        </section>
+        x1,y1 は曲線の始点向けの制御点の座標、x2,y2 は曲線の終点向けの制御点の座標です。
+        よく分かってないので制御点って何よ？って聞かないでください。
+
+        左上、右上、右下、左下部分に分けて描画します。
+        <a href='#desc-algorithm-2-arcs'>2本の円弧で描画</a>と同じく横の半径が 40、縦の半径が 30 の楕円を描きます (rx=40, ry=30)。
+
+        <h4>左上部分</h4>
+        ※見やすさのために第2小数点までで切り捨ててます。<br/>
+        <pre class='code-inline'>M10,40 C10,23.43 17.90,10 40,10</pre>
+        <svg width='60' height='50' class='svg-example'>
+          <path stroke='blue' fill='none' d='M10,40 C10,23.43 27.90,10 50,10'/>
+        </svg>
+
+        <h4>右上部分</h4>
+        <pre class='code-inline'>M10,10 C32.09,10 50,23.43 50,40</pre>
+        <svg width='60' height='50' class='svg-example'>
+          <path stroke='blue' fill='none' d='M10,10 C32.09,10 50,23.43 50,40'/>
+        </svg>
+
+        <h4>右下部分</h4>
+        <pre class='code-inline'>M50,10 C50,26.56 32.09,40 10,40</pre>
+        <svg width='60' height='50' class='svg-example'>
+          <path stroke='blue' fill='none' d='M50,10 C50,26.56 32.09,40 10,40'/>
+        </svg>
+
+        <h4>左下部分</h4>
+        <pre class='code-inline'>M50,40 C27.90 40 10 26.56 10 10</pre>
+        <svg width='60' height='50' class='svg-example'>
+          <path stroke='blue' fill='none' d='M50,40 C27.90 40 10 26.56 10 10'/>
+        </svg>
+
+        実際のコードが生成するパスは以下のようになります。
+        <pre class='code-block'>M (CX - rx) CY
+C (CX - rx) (CY - KAPPA * ry) (CX - KAPPA * rx) (CY - ry) CX (CY - ry)
+C (CX + KAPPA * rx) (CY - ry) (CX + rx) (CY - KAPPA * ry) (CX + rx) CY
+C (CX + rx) (CY + KAPPA * ry) (CX + KAPPA * rx) (CY + ry) CX (CY + ry)
+C (CX - KAPPA * rx) (CY + ry) (CX - rx) (CY + KAPPA * ry) (CX - rx) CY
+</pre>
+        ここで KAPPA という謎の変数が出現しますが、これは 0.55228... (= (-1 + sqrt(2)) / 3 * 4) という値です。
+        詳しくは
+        <ul>
+          <li><a href='https://cat-in-136.github.io/2014/03/bezier-1-kappa.html'>ベジェ曲線による円の描画の制御点の位置はなぜ0.55228…なのか?</a></li>
+          <li><a href='http://d.hatena.ne.jp/Zellij/20131021/p1'>「イラレの円は本当は円じゃない」というけど誤差はどれくらいなのか - 大人になってからの再学習</a></li>
+          <li><a href='http://www.whizkidtech.redprince.net/bezier/circle/kappa/'>Bézier Circle - Derivation of Kappa</a> (英語。元ネタ？)</li>
+        </ul>
+        を参照してください。
+      </section>
+
+      <section id='desc-algorithm-8-quad-bezier-curves'>
+        <h2><a href='#desc-algorithm-8-quad-bezier-curves' class='permalink'>#</a> 8本の2次ベジェ曲線で描画</h2>
+        TODO
+      </section>
+    </section>
+
+    <section id='references' class='toplevel-section'>
       <h2><a href='#references' class='permalink'>#</a> 参考記事</h2>
       <ul>
         <li>SVGタグについての全般的な解説
@@ -148,6 +265,11 @@
         <li>3次ベジェ曲線で円を描く方法に関する URL 集
           <ul>
             <li><a href='https://cat-in-136.github.io/2014/03/bezier-1-kappa.html'>ベジェ曲線による円の描画の制御点の位置はなぜ0.55228…なのか?</a></li>
+          </ul>
+        </li>
+        <li>3次ベジェ曲線の制御点 kappa の元ネタ？ (英語)
+          <ul>
+            <li><a href='http://www.whizkidtech.redprince.net/bezier/circle/kappa/'>Bézier Circle - Derivation of Kappa</a></li>
           </ul>
         </li>
       </ul>
