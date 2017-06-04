@@ -137,21 +137,36 @@
         現在の位置と x, y (終点) と縦横の半径の整合性が取れてないと正しく描画されません。</p>
 
         <h4>上部分</h4>
-        <pre class='code-inline'>M10,10 A40,30 0,1,0 90,10</pre>
+        <code class='code-inline'>M10,10 A40,30 0,1,0 90,10</code>
         <svg width='100' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M10,10 A40,30 0,1,0 90,10'/>
         </svg>
 
         <h4>下部分</h4>
-        <pre class='code-inline'>M90,40 A40,30 0,1,0 10,40</pre>
+        <code class='code-inline'>M90,40 A40,30 0,1,0 10,40</code>
         <svg width='100' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M90,40 A40,30 0,1,0 10,40'/>
         </svg>
 
-        実際のコードが生成するパスは以下のようになります (CX,CY = 円の中心の X,Y 座標)。
+        <p>実際のコードが生成するパスは以下のようになります (CX,CY = 円の中心の X,Y 座標)。
         <pre class='code-block'>M (CX - rx) CY
 A rx ry 0 1 0 (CX + rx) CY
-A rx ry 0 1 0 (CX - rx) CY</pre>
+A rx ry 0 1 0 (CX - rx) CY</pre></p>
+
+        <p>実際のコードは以下の通りです (<a href='https://github.com/tyru/svg-circle-misc-algorithm/blob/872e3643c5cdda14ff32b77ff117a7d875ad2fdf/app.js#L12-L20'>該当の箇所</a>)。
+        ここではパスを表す二次元配列を返しています。全て半角空白かカンマで join すると SVG のパス文字列が出来上がります。
+        <code class='code-inline'>param.figure</code>が "circle" なら真円で、"ellipse" なら楕円のパス文字列を生成します。
+        <pre class='vim-tohtml'>
+  drawCircle(param) <span class="Identifier">{</span>
+    <span class="Statement">const</span> rx = param.rx;
+    <span class="Statement">const</span> ry = param.figure === <span class="Constant">'circle'</span> ? rx : param.ry;
+    <span class="Statement">return</span> <span class="Identifier">[</span>
+      <span class="Identifier">[</span><span class="Constant">'M'</span>, CX - rx, CY<span class="Identifier">]</span>,
+      <span class="Identifier">[</span><span class="Constant">'A'</span>, rx, ry, 0, 1, 0, CX + rx, CY<span class="Identifier">]</span>,
+      <span class="Identifier">[</span><span class="Constant">'A'</span>, rx, ry, 0, 1, 0, CX - rx, CY<span class="Identifier">]</span>,
+    <span class="Identifier">]</span>;
+  <span class="Identifier">}</span>
+</pre></p>
       </section>
 
       <section id='desc-algorithm-4-cubic-bezier-curves'>
@@ -181,25 +196,25 @@ A rx ry 0 1 0 (CX - rx) CY</pre>
 
         <h4>左上部分</h4>
         ※見やすさのために第2小数点までで切り捨ててます。<br/>
-        <pre class='code-inline'>M10,40 C10,23.43 17.90,10 40,10</pre>
+        <code class='code-inline'>M10,40 C10,23.43 17.90,10 40,10</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M10,40 C10,23.43 27.90,10 50,10'/>
         </svg>
 
         <h4>右上部分</h4>
-        <pre class='code-inline'>M10,10 C32.09,10 50,23.43 50,40</pre>
+        <code class='code-inline'>M10,10 C32.09,10 50,23.43 50,40</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M10,10 C32.09,10 50,23.43 50,40'/>
         </svg>
 
         <h4>右下部分</h4>
-        <pre class='code-inline'>M50,10 C50,26.56 32.09,40 10,40</pre>
+        <code class='code-inline'>M50,10 C50,26.56 32.09,40 10,40</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M50,10 C50,26.56 32.09,40 10,40'/>
         </svg>
 
         <h4>左下部分</h4>
-        <pre class='code-inline'>M50,40 C27.90 40 10 26.56 10 10</pre>
+        <code class='code-inline'>M50,40 C27.90 40 10 26.56 10 10</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M50,40 C27.90 40 10 26.56 10 10'/>
         </svg>
@@ -217,9 +232,24 @@ C (CX - KAPPA * rx) (CY + ry) (CX - rx) (CY + KAPPA * ry) (CX - rx) CY
         <ul>
           <li><a href='https://cat-in-136.github.io/2014/03/bezier-1-kappa.html'>ベジェ曲線による円の描画の制御点の位置はなぜ0.55228…なのか?</a></li>
           <li><a href='http://d.hatena.ne.jp/Zellij/20131021/p1'>「イラレの円は本当は円じゃない」というけど誤差はどれくらいなのか - 大人になってからの再学習</a></li>
-          <li><a href='http://www.whizkidtech.redprince.net/bezier/circle/kappa/'>Bézier Circle - Derivation of Kappa</a> (英語。元ネタ？)</li>
+          <li><a href='http://www.whizkidtech.redprince.net/bezier/circle/kappa/'>Bézier Circle - Derivation of Kappa</a> (元ネタ？)</li>
         </ul>
         を参照してください。</p>
+
+        <p>実際のコードは以下の通りです (<a href='https://github.com/tyru/svg-circle-misc-algorithm/blob/872e3643c5cdda14ff32b77ff117a7d875ad2fdf/app.js#L34-L44'>該当の箇所</a>)。
+        <pre class='vim-tohtml'>
+  drawCircle(param) <span class="Identifier">{</span>
+    <span class="Statement">const</span> rx = param.rx;
+    <span class="Statement">const</span> ry = param.figure === <span class="Constant">'circle'</span> ? rx : param.ry;
+    <span class="Statement">return</span> <span class="Identifier">[</span>
+      <span class="Identifier">[</span><span class="Constant">'M'</span>, CX - rx, CY<span class="Identifier">]</span>,
+      <span class="Identifier">[</span><span class="Constant">'C'</span>, CX - rx, CY - KAPPA * ry, CX - KAPPA * rx, CY - ry, CX, CY - ry<span class="Identifier">]</span>,
+      <span class="Identifier">[</span><span class="Constant">'C'</span>, CX + KAPPA * rx, CY - ry, CX + rx, CY - KAPPA * ry, CX + rx, CY<span class="Identifier">]</span>,
+      <span class="Identifier">[</span><span class="Constant">'C'</span>, CX + rx, CY + KAPPA * ry, CX + KAPPA * rx, CY + ry, CX, CY + ry<span class="Identifier">]</span>,
+      <span class="Identifier">[</span><span class="Constant">'C'</span>, CX - KAPPA * rx, CY + ry, CX - rx, CY + KAPPA * ry, CX - rx, CY<span class="Identifier">]</span>,
+    <span class="Identifier">]</span>;
+  <span class="Identifier">}</span>
+</pre></p>
       </section>
 
       <section id='desc-algorithm-8-quad-bezier-curves'>
@@ -252,62 +282,62 @@ C (CX - KAPPA * rx) (CY + ry) (CX - rx) (CY + KAPPA * ry) (CX - rx) CY
 
         <h4>第4象限 (上)</h4>
         ※見やすさのために第2小数点までで切り捨ててます。<br/>
-        <pre class='code-inline'>M50,10 Q50,22.42 38.28,31.21</pre>
+        <code class='code-inline'>M50,10 Q50,22.42 38.28,31.21</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M50,10 Q50,22.42 38.28,31.21'/>
         </svg>
 
         <h4>第4象限 (下)</h4>
-        <pre class='code-inline'>M38.28,31.21 Q26.56,40 10,40</pre>
+        <code class='code-inline'>M38.28,31.21 Q26.56,40 10,40</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M38.28,31.21 Q26.56,40 10,40'/>
         </svg>
 
         <h4>第3象限 (下)</h4>
-        <pre class='code-inline'>M40,40 Q33.43,40 21.71,31.21</pre>
+        <code class='code-inline'>M40,40 Q33.43,40 21.71,31.21</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M40,40 Q33.43,40 21.71,31.21'/>
         </svg>
 
         <h4>第3象限 (上)</h4>
-        <pre class='code-inline'>M21.71,31.21 Q10,22.42 10,10</pre>
+        <code class='code-inline'>M21.71,31.21 Q10,22.42 10,10</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M21.71,31.21 Q10,22.42 10,10'/>
         </svg>
 
         <h4>第2象限 (下)</h4>
-        <pre class='code-inline'>M10,40 Q9.99,27.57 21.71,18.78</pre>
+        <code class='code-inline'>M10,40 Q9.99,27.57 21.71,18.78</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M10,40 Q9.99,27.57 21.71,18.78'/>
         </svg>
 
         <h4>第2象限 (上)</h4>
-        <pre class='code-inline'>M21.71,18.78 Q33.43,10 49.99,10</pre>
+        <code class='code-inline'>M21.71,18.78 Q33.43,10 49.99,10</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M21.71,18.78 Q33.43,10 49.99,10'/>
         </svg>
 
         <h4>第1象限 (上)</h4>
-        <pre class='code-inline'>M10,10 Q26.56,9.99 38.28,18.78</pre>
+        <code class='code-inline'>M10,10 Q26.56,9.99 38.28,18.78</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M10,10 Q26.56,9.99 38.28,18.78'/>
         </svg>
 
         <h4>第1象限 (下)</h4>
-        <pre class='code-inline'>M38.28,18.78 Q50,27.57 50,39.99</pre>
+        <code class='code-inline'>M38.28,18.78 Q50,27.57 50,39.99</code>
         <svg width='60' height='50' class='svg-example'>
           <path stroke='blue' fill='none' d='M38.28,18.78 Q50,27.57 50,39.99'/>
         </svg>
 
-        実際のコードが生成するパスは以下のようになります。
+        <p>実際のコードが生成するパスは以下のようになります。
         <pre class='code-block'>M (CX + rx) CY
 Q (controlX(theta) + CX) (controlY(theta) + CY) (anchorX(theta) + CX) (anchorY(theta) + CY)
 Q (上と同じ引数のものが7個続く)</pre>
         theta はそれぞれの角度 (ラジアン) です。例えば第1象限 (下) だったら 1/4 * π、第1象限 (上)だったら 1/2 * π といった値です。
-        controlX, controlY, anchorX, anchorY はそれぞれ theta を渡すと制御点と終点の座標を返します。
-        実際のコードを見せた方が早いと思うので引用します。
+        controlX, controlY, anchorX, anchorY はそれぞれ theta を渡すと制御点と終点の座標を返します。</p>
 
-<pre class='vim-tohtml'>
+        <p>実際のコードは以下の通りです (<a href='https://github.com/tyru/svg-circle-misc-algorithm/blob/872e3643c5cdda14ff32b77ff117a7d875ad2fdf/app.js#L64-L80'>該当の箇所</a>)。
+        <pre class='vim-tohtml'>
   <span class="Comment">/**</span>
 <span class="Comment">    * <a href="http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html">http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html</a></span>
 <span class="Comment">    */</span>
@@ -334,7 +364,6 @@ Q (上と同じ引数のものが7個続く)</pre>
     <span class="Statement">return</span> <span class="Identifier">[</span>...<span class="Type">Array</span>(d + 1).keys()<span class="Identifier">]</span>.map(n =&gt; n + from);
   <span class="Identifier">}</span>
 </pre>
-        rx と ry は上の図では rx=40, ry=30 です。
       </section>
     </section>
 
@@ -349,7 +378,7 @@ Q (上と同じ引数のものが7個続く)</pre>
         </li>
         <li>2本の円弧を用いた円の描画の元ネタ
           <ul>
-            <li><a href='https://stackoverflow.com/questions/5737975/circle-drawing-with-svgs-arc-path'>geometry - Circle drawing with SVG&#39;s arc path - Stack Overflow</a></li>
+            <li><a href='https://stackoverflow.com/a/10477334'>geometry - Circle drawing with SVG&#39;s arc path - Stack Overflow</a></li>
           </ul>
         </li>
         <li>4本の3次ベジェ曲線を用いた円の描画の元ネタ
@@ -368,7 +397,7 @@ Q (上と同じ引数のものが7個続く)</pre>
             <li><a href='https://cat-in-136.github.io/2014/03/bezier-1-kappa.html'>ベジェ曲線による円の描画の制御点の位置はなぜ0.55228…なのか?</a></li>
           </ul>
         </li>
-        <li>3次ベジェ曲線の制御点 kappa の元ネタ？ (英語)
+        <li>3次ベジェ曲線の制御点 kappa の元ネタ？
           <ul>
             <li><a href='http://www.whizkidtech.redprince.net/bezier/circle/kappa/'>Bézier Circle - Derivation of Kappa</a></li>
           </ul>
