@@ -48,6 +48,13 @@
   display: table;
   background-color: #dcfff9;
 }
+.quadratic-circle-images {
+  display: flex;
+  flex-direction: row;
+}
+.text-center {
+  text-align: center;
+}
 
 /* Vim :TOhtml by evening colorscheme */
 .vim-tohtml { white-space: pre-wrap; font-family: monospace; color: #ffffff; background-color: #6c6c6c; font-size: 1em; }

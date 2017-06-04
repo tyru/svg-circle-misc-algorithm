@@ -99,8 +99,8 @@
         <a href='http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo_03.htm'>svg要素の基本的な使い方まとめ</a>
       </section>
 
-      などに移植できるよう汎用性を持たせることができます。<br/>
-      …というのは調べて分かった建前で、ふと必要になったから調べただけです。
+      などに移植できるよう汎用性を持たせることができます。
+      <p>…というのは調べて分かった建前で、ふと必要になったから調べただけです。</p>
     </section>
 
     <section id='warning' class='toplevel-section'>
@@ -113,27 +113,28 @@
     <section id='desc-algorithm' class='toplevel-section'>
       <h2><a href='#desc-algorithm' class='permalink'>#</a> アルゴリズムについての解説</h2>
       誤差 (=円の歪み) に関しては以下の認識です (上に行くほど誤差が発生する)。
-      測定をした訳ではないので間違っているかもしれません、すみません…。
-      ただ2本の円弧に関してはベジェ曲線と違って本当の円なので誤差はないはずです。
       <ol>
         <li>8本の2次ベジェ曲線で描画</li>
         <li>4本の3次ベジェ曲線で描画</li>
         <li>2本の円弧で描画</li>
       </ol>
+      測定をした訳ではないので間違っているかもしれません、すみません… (まとめただけで数学的な証明や誤差の測定などの検証はしていません)。
+      ただ<b>2本の円弧に関してはベジェ曲線と違って本当の円なので誤差はない</b>はずです。
 
       <section id='desc-algorithm-2-arcs'>
         <h2><a href='#desc-algorithm-2-arcs' class='permalink'>#</a> 2本の円弧で描画</h2>
-        <a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths#.E5.86.86.E5.BC.A7'>Paths - SVG | MDN</a> から引用。
+
+        <p><a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths#.E5.86.86.E5.BC.A7'>Paths - SVG | MDN</a> から引用。
         <section class='quote'>
           A rx ry x-axis-rotation large-arc-flag sweep-flag x y
         </section>
         今回は x-axis-rotation, large-arc-flag sweep-flag は今回は無視して構いません。
         ただ2本の曲線とも同じ値を渡す必要はあります (0,1,0 とか)。
-        rx,ry はそれぞれ縦と横の半径、x,y は終点の座標です。
+        rx,ry はそれぞれ縦と横の半径、x,y は終点の座標です。</p>
 
-        上部分と下部分に分けて描画します (左右でもいい)。
+        <p>上部分と下部分に分けて描画します (左右でもいい)。
         ここでは横の半径が 40、縦の半径が 30 の楕円を描きます (rx=40, ry=30)。
-        現在の位置と x, y (終点) と縦横の半径の整合性が取れてないと正しく描画されません。
+        現在の位置と x, y (終点) と縦横の半径の整合性が取れてないと正しく描画されません。</p>
 
         <h4>上部分</h4>
         <pre class='code-inline'>M10,10 A40,30 0,1,0 90,10</pre>
@@ -155,18 +156,25 @@ A rx ry 0 1 0 (CX - rx) CY</pre>
 
       <section id='desc-algorithm-4-cubic-bezier-curves'>
         <h2><a href='#desc-algorithm-4-cubic-bezier-curves' class='permalink'>#</a> 4本の3次ベジェ曲線で描画</h2>
-        Illustrator でも使われているらしい方法。
+        <p>Illustrator でも使われているらしい方法。
         <section class='quote'>
-          Illustratorの楕円ツールで書く円は、本当は円ではなくて、近似値なんです。つまり、円としてはわずかに歪んでいるわけ。これはベジェ曲線（wikipedia:ベジェ曲線）というものを使う以上、そういう仕様なのですね。
+          Illustratorの楕円ツールで書く円は、本当は円ではなくて、近似値なんです。つまり、円としてはわずかに歪んでいるわけ。これはベジェ曲線というものを使う以上、そういう仕様なのですね。
           <a href='http://d.hatena.ne.jp/n-yuji/20131017/p1'>イラレの円は本当は円じゃない（もしくは時空の裂け目について） - 遠近法ノート</a>
-        </section>
+        </section></p>
 
-        <a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths#.E3.83.99.E3.82.B8.E3.82.A7.E6.9B.B2.E7.B7.9A'>Paths - SVG | MDN</a> から引用。
+        <p>なぜ4本かというと
+        <section class='quote'>
+          180度ぐらいから一気に誤差が増える。180度でも2%近い誤差なので、90度ぐらいで分割するほうが無難だろう。
+          <a href='https://pgcity.jp/2010/12/20/%E3%83%99%E3%82%B8%E3%82%A7%E6%9B%B2%E7%B7%9A%E3%81%A7%E5%86%86%E3%82%92%E6%8F%8F%E3%81%91%E3%82%8B%E3%81%8B/'>11:ベジェ曲線で円を描けるか &#8211; Programming Cit</a>
+        </section>
+        とのこと。</p>
+
+        <p><a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths#.E3.83.99.E3.82.B8.E3.82.A7.E6.9B.B2.E7.B7.9A'>Paths - SVG | MDN</a> から引用。
         <section class='quote'>
           C x1 y1, x2 y2, x y
         </section>
         x1,y1 は曲線の始点向けの制御点の座標、x2,y2 は曲線の終点向けの制御点の座標、x,y は終点の座標です。
-        よく分かってないので制御点って何よ？って聞かないでください。
+        よく分かってないので制御点って何よ？って聞かないでください。</p>
 
         左上、右上、右下、左下部分に分けて描画します。
         <a href='#desc-algorithm-2-arcs'>2本の円弧で描画</a>と同じく横の半径が 40、縦の半径が 30 の楕円を描きます (rx=40, ry=30)。
@@ -203,24 +211,41 @@ C (CX + KAPPA * rx) (CY - ry) (CX + rx) (CY - KAPPA * ry) (CX + rx) CY
 C (CX + rx) (CY + KAPPA * ry) (CX + KAPPA * rx) (CY + ry) CX (CY + ry)
 C (CX - KAPPA * rx) (CY + ry) (CX - rx) (CY + KAPPA * ry) (CX - rx) CY
 </pre>
-        ここで KAPPA という謎の変数が出現しますが、これは 0.55228... (= (-1 + sqrt(2)) / 3 * 4) という値です。
+
+        <p>ここで KAPPA という謎の変数が出現しますが、これは 0.55228... (= (-1 + sqrt(2)) / 3 * 4) という値です。
         詳しくは
         <ul>
           <li><a href='https://cat-in-136.github.io/2014/03/bezier-1-kappa.html'>ベジェ曲線による円の描画の制御点の位置はなぜ0.55228…なのか?</a></li>
           <li><a href='http://d.hatena.ne.jp/Zellij/20131021/p1'>「イラレの円は本当は円じゃない」というけど誤差はどれくらいなのか - 大人になってからの再学習</a></li>
           <li><a href='http://www.whizkidtech.redprince.net/bezier/circle/kappa/'>Bézier Circle - Derivation of Kappa</a> (英語。元ネタ？)</li>
         </ul>
-        を参照してください。
+        を参照してください。</p>
       </section>
 
       <section id='desc-algorithm-8-quad-bezier-curves'>
         <h2><a href='#desc-algorithm-8-quad-bezier-curves' class='permalink'>#</a> 8本の2次ベジェ曲線で描画</h2>
-        <a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths#.E3.83.99.E3.82.B8.E3.82.A7.E6.9B.B2.E7.B7.9A'>Paths - SVG | MDN</a> から引用。
+
+        <p><a href='https://developer.mozilla.org/ja/docs/Web/SVG/Tutorial/Paths#.E3.83.99.E3.82.B8.E3.82.A7.E6.9B.B2.E7.B7.9A'>Paths - SVG | MDN</a> から引用。
         <section class='quote'>
           Q x1 y1, x y
         </section>
         x1,y1 は曲線の始点向けの制御点の座標です。
-        x,y は終点の座標です。
+        x,y は終点の座標です。</p>
+
+        <p>なぜ8本かという記事はありませんでしたが、おそらく4本の時と同じく誤差の問題だと思います。
+        <a href='http://www.timotheegroleau.com/Flash/articles/cubic_bezier_in_flash.htm'>Approximating Cubic Bezier Curves in Flash MX</a>
+        の「Flash MX」にある「4 Quadratic curves (4本の2次ベジェ曲線)」の図を見ると少し歪んでるのが目で見ても分かるぐらいなので。<br/>
+        <section class='quote quadratic-circle-images'>
+          <div>
+            <img src='circle_quadratic.gif'/>
+            <p class='text-center'>4本の2次ベジェ曲線</p>
+          </div>
+          <div>
+            <img src='circle_ide.gif'/>
+            <p class='text-center'>実際の円</p>
+          </div>
+        </section>
+        </p>
 
         第4象限 (上)、第4象限 (下)、第3象限 (下)、第3象限 (上)、第2象限 (下)、第2象限 (上)、第1象限 (上)、第1象限 (下) 部分の8本の曲線に分けて描画します。
         <a href='#desc-algorithm-2-arcs'>2本の円弧で描画</a>と同じく横の半径が 40、縦の半径が 30 の楕円を描きます (rx=40, ry=30)。
@@ -283,26 +308,31 @@ Q (上と同じ引数のものが7個続く)</pre>
         実際のコードを見せた方が早いと思うので引用します。
 
 <pre class='vim-tohtml'>
-<span class="Comment">/**</span>
-<span class="Comment">  * <a href="http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html">http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html</a></span>
-<span class="Comment">  */</span>
-drawCircle(param) <span class="Identifier">{</span>
-  <span class="Statement">const</span> rx = param.rx;
-  <span class="Statement">const</span> ry = param.figure === <span class="Constant">'circle'</span> ? rx : param.ry;
-  <span class="Statement">const</span> SEGMENTS = 8;
-  <span class="Statement">const</span> ANGLE = 2 * Math.PI / SEGMENTS;
-  <span class="Statement">const</span> anchorX = theta =&gt; rx * Math.cos(theta);
-  <span class="Statement">const</span> anchorY = theta =&gt; ry * Math.sin(theta);
-  <span class="Statement">const</span> controlX = theta =&gt; anchorX(theta) + rx * Math.tan(ANGLE / 2) * Math.cos(theta - Math.PI / 2);
-  <span class="Statement">const</span> controlY = theta =&gt; anchorY(theta) + ry * Math.tan(ANGLE / 2) * Math.sin(theta - Math.PI / 2);
-  <span class="Statement">return</span> <span class="Identifier">[</span>
-    <span class="Identifier">[</span><span class="Constant">'M'</span>, CX + rx, CY<span class="Identifier">]</span>,
-    ... <span class="Identifier">this</span>.range(1, SEGMENTS).map(index =&gt; <span class="Identifier">{</span>
-      <span class="Statement">const</span> theta = index * ANGLE;
-      <span class="Statement">return</span> <span class="Identifier">[</span><span class="Constant">'Q'</span>, controlX(theta) + CX, controlY(theta) + CY, anchorX(theta) + CX, anchorY(theta) + CY<span class="Identifier">]</span>;
-    <span class="Identifier">}</span>)
-  <span class="Identifier">]</span>;
-<span class="Identifier">}</span>
+  <span class="Comment">/**</span>
+<span class="Comment">    * <a href="http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html">http://www.fumiononaka.com/TechNotes/Flash/FN0506002.html</a></span>
+<span class="Comment">    */</span>
+  drawCircle(param) <span class="Identifier">{</span>
+    <span class="Statement">const</span> rx = param.rx;
+    <span class="Statement">const</span> ry = param.figure === <span class="Constant">'circle'</span> ? rx : param.ry;
+    <span class="Statement">const</span> SEGMENTS = 8;
+    <span class="Statement">const</span> ANGLE = 2 * Math.PI / SEGMENTS;
+    <span class="Statement">const</span> anchorX = theta =&gt; rx * Math.cos(theta);
+    <span class="Statement">const</span> anchorY = theta =&gt; ry * Math.sin(theta);
+    <span class="Statement">const</span> controlX = theta =&gt; anchorX(theta) + rx * Math.tan(ANGLE / 2) * Math.cos(theta - Math.PI / 2);
+    <span class="Statement">const</span> controlY = theta =&gt; anchorY(theta) + ry * Math.tan(ANGLE / 2) * Math.sin(theta - Math.PI / 2);
+    <span class="Statement">return</span> <span class="Identifier">[</span>
+      <span class="Identifier">[</span><span class="Constant">'M'</span>, CX + rx, CY<span class="Identifier">]</span>,
+      ... <span class="Identifier">this</span>.range(1, SEGMENTS).map(index =&gt; <span class="Identifier">{</span>
+        <span class="Statement">const</span> theta = index * ANGLE;
+        <span class="Statement">return</span> <span class="Identifier">[</span><span class="Constant">'Q'</span>, controlX(theta) + CX, controlY(theta) + CY, anchorX(theta) + CX, anchorY(theta) + CY<span class="Identifier">]</span>;
+      <span class="Identifier">}</span>)
+    <span class="Identifier">]</span>;
+  <span class="Identifier">}</span>
+
+  range(from, to) <span class="Identifier">{</span>
+    <span class="Statement">const</span> d = to - from;
+    <span class="Statement">return</span> <span class="Identifier">[</span>...<span class="Type">Array</span>(d + 1).keys()<span class="Identifier">]</span>.map(n =&gt; n + from);
+  <span class="Identifier">}</span>
 </pre>
         rx と ry は上の図では rx=40, ry=30 です。
       </section>
